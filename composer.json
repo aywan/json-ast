@@ -1,0 +1,29 @@
+{
+    "name": "aywan/json-ast",
+    "description": "Json AST parser",
+    "type": "library",
+    "require-dev": {
+        "phpunit/phpunit": "^9.6"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Aywan\\JsonAst\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Ivan Bragin",
+            "email": "aywan@aywan.ru"
+        }
+    ],
+    "require": {
+        "php": ">= 7.4.1 || ^8.0",
+        "ext-mbstring": "*"
+    }
+}
