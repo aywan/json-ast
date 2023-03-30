@@ -26,4 +26,17 @@ final class Token
 
         return $token;
     }
+
+    /**
+     * @return int
+     */
+    public function getType(): int
+    {
+        return $this->type;
+    }
+
+    public function isType(...$type): bool
+    {
+        return in_array($this->type, $type, true);
+    }
 }

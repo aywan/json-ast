@@ -28,17 +28,17 @@ final class Tokenizer
 
     /**
      * @param string $input
-     * @return TokenList
+     * @return TokenData
      *
      * @throws TokenizerException
      */
-    public function parse(string $input): TokenList
+    public function parse(string $input): TokenData
     {
         $this->line = 1;
         $this->column = 0;
         $this->index = 0;
 
-        $tokens = new TokenList();
+        $tokens = new TokenData($input);
 
         $this->maxIndex = mb_strlen($input);
         while ($this->index < $this->maxIndex) {

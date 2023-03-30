@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use Aywan\JsonAst\Tokenizer\Tokenizer;
-use Aywan\JsonAst\Tokenizer\TokenList;
+use Aywan\JsonAst\JsonAstParser;
+use Aywan\JsonAst\Node\ArrayNode;
+use Aywan\JsonAst\Node\ObjectNode;
+use Aywan\JsonAst\Tokenizer\TokenData;
 use Aywan\JsonAst\Tokenizer\TokenType;
 use PHPUnit\Framework\TestCase;
 
-final class TokenizerTest extends TestCase
+final class ParserTest extends TestCase
 {
     public function testSimple(): void
     {
@@ -32,7 +34,9 @@ final class TokenizerTest extends TestCase
     "x": [{"y":  true}, {"y": false}, {"y": null}]
 }
 JSON;
-        $tokens = (new Tokenizer())->parse($json);
+        $ast = (new JsonAstParser())->parse($json);
+
+        $tokens = $ast->getTokens();
 
         $this->assertCount(89, $tokens->getTokens());
 
@@ -220,9 +224,35 @@ JSON;
             $tokens,
             $json,
         );
+
+        $root = $ast->getRoot();
+
+        $this->assertInstanceOf(ObjectNode::class, $root);
+        $this->assertTrue($root->hasProperty('a'));
+        $this->assertEquals(133, $root->getProperty('a')->getPhpValue());
+
+        $this->assertTrue($root->hasProperty('b'));
+        $b = $root->getProperty('b');
+        $this->assertInstanceOf(ArrayNode::class, $b);
+        $this->assertCount(8, $b);
+        $this->assertArrayHasKey(4, $b);
+        $b4 = $b[4];
+        $this->assertInstanceOf(ObjectNode::class, $b4);
+        $this->assertTrue($b4->hasProperty('s'));
+        $this->assertEquals("\n", $b4->getProperty('s')->getPhpValue());
+        $this->assertNull($b[5]->getPhpValue());
+        $this->assertTrue($b[6]->getPhpValue());
+        $this->assertFalse($b[7]->getPhpValue());
+
+        $this->assertTrue($root->hasProperty('x'));
+        $x = $root->getProperty('x');
+        $this->assertEquals(
+            [['y' => true], ['y' => false], ['y' => null]],
+            $x->getPhpValue(),
+        );
     }
 
-    private function assertTokens(array $expected, TokenList $tokenList, string $input): void
+    private function assertTokens(array $expected, TokenData $tokenList, string $input): void
     {
         $tokens = $tokenList->getTokens();
 

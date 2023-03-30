@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Aywan\JsonAst\Tokenizer;
 
-final class TokenizerException extends \Exception
+use Aywan\JsonAst\JsonAstException;
+
+final class TokenizerException extends JsonAstException
 {
     public static function unexpectedSymbol(string $input, int $index, int $line, int $column): self
     {

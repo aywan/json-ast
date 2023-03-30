@@ -24,6 +24,7 @@
     ],
     "require": {
         "php": ">= 7.4.1 || ^8.0",
-        "ext-mbstring": "*"
+        "ext-mbstring": "*",
+        "ext-json": "*"
     }
 }
