@@ -78,6 +78,9 @@ final class TreeParser
 
         while ($this->index < $this->tokenCount) {
             $propertyIdentifier = $tokens[$this->index];
+            if ($tokens[$this->index]->isType(TokenType::RIGHT_BRACE)) {
+                break;
+            }
             if (! $propertyIdentifier->isType(TokenType::STRING)) {
                 throw ParserException::expectedStringToken($propertyIdentifier);
             }

@@ -276,4 +276,27 @@ JSON;
             $this->assertEquals($valueLine, $token->value);
         }
     }
+
+    public function testEmptyObject(): void
+    {
+        $json = '{}';
+        $ast = (new JsonAstParser())->parse($json);
+
+        $tokens = $ast->getTokens();
+
+        $this->assertTokens(
+            [
+                [TokenType::LEFT_BRACE, 0],
+                [TokenType::RIGHT_BRACE, 1]
+            ],
+            $tokens,
+            $json,
+        );
+
+        $root = $ast->getRoot();
+
+        $this->assertInstanceOf(ObjectNode::class, $root);
+        $this->assertEmpty($root->getAllPropertyNames());
+    }
+
 }
