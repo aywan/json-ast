@@ -10,15 +10,17 @@ final class TokenizerException extends JsonAstException
 {
     public static function unexpectedSymbol(string $input, int $index, int $line, int $column): self
     {
-        $at = mb_substr($input, max(0, $index-5), 10);
+        $s = mb_substr($input, $index, 1);
+        $at = mb_substr($input, max(0, $index - 10), 20);
 
-        return new self("unexpected symbol at {$line}:{$column}: ...{$at}...");
+        return new self("unexpected symbol '{$s}' at {$line}:{$column} ({$index}): ...{$at}...");
     }
 
     public static function badString(string $input, int $index, int $line, int $column): self
     {
-        $at = mb_substr($input, max(0, $index-5), 10);
+        $s = mb_substr($input, $index, 1);
+        $at = mb_substr($input, max(0, $index - 10), 20);
 
-        return new self("unexpected string symbol at {$line}:{$column}: ...{$at}...");
+        return new self("unexpected string symbol '{$s}' at {$line}:{$column} ({$index}): ...{$at}...");
     }
 }

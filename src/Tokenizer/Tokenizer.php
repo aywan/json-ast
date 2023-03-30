@@ -68,29 +68,29 @@ final class Tokenizer
 
     private function skipWhitespace(string $input): bool
     {
-        if ($input[$this->index] === "\r") {
+        if (mb_substr($input, $this->index, 1) === "\r") {
             $this->index++;
             $this->line++;
             $this->column = 0;
-            if ($input[$this->index] === "\n") {
+            if (mb_substr($input, $this->index, 1) === "\n") {
                 $this->index++;
             }
 
             return true;
         }
 
-        if ($input[$this->index] === "\n") {
+        if (mb_substr($input, $this->index, 1) === "\n") {
             $this->index++;
             $this->line++;
             $this->column = 0;
-            if ($input[$this->index] === "\r") {
+            if (mb_substr($input, $this->index, 1) === "\r") {
                 $this->index++;
             }
 
             return true;
         }
 
-        if ($input[$this->index] === ' ' || $input[$this->index] === "\t") {
+        if (mb_substr($input, $this->index, 1) === ' ' || mb_substr($input, $this->index, 1) === "\t") {
             $this->index++;
             $this->column++;
 
@@ -102,7 +102,7 @@ final class Tokenizer
 
     private function parseSymbol(string $input): ?Token
     {
-        $char = $input[$this->index];
+        $char = mb_substr($input, $this->index, 1);
 
         if (!isset(self::$symbolsTokenMap[$char])) {
             return null;
@@ -152,7 +152,7 @@ final class Tokenizer
      */
     private function parseString(string $input): ?Token
     {
-        if ($input[$this->index] !== '"') {
+        if (mb_substr($input, $this->index, 1) !== '"') {
             return null;
         }
 
@@ -163,14 +163,14 @@ final class Tokenizer
         $isEscape = false;
 
         while ($idx < $this->maxIndex) {
-            $char = $input[$idx];
+            $char = mb_substr($input, $idx, 1);
 
             if ($isEscape) {
                 if (in_array($char, $escapes, true)) {
                     $idx++;
-                    if ($input[$idx] === 'u') {
+                    if (mb_substr($input, $idx, 1) === 'u') {
                         for ($i = 0; $i < 4; $i++) {
-                            $charOrd = ord(strtolower($input[$idx]));
+                            $charOrd = ord(strtolower(mb_substr($input, $idx, 1)));
                             if ($charOrd < ord('0') || $charOrd > ord('a')) {
                                 throw TokenizerException::badString($input, $idx, $this->line, $this->column);
                             }
@@ -245,7 +245,7 @@ final class Tokenizer
         $i = $this->index;
 
         $stopSymbols = [" ", "\n", "\r", "\t", ",", ":", "]", "}"];
-        while ($i < $this->maxIndex && !in_array($input[$i], $stopSymbols, true)) {
+        while ($i < $this->maxIndex && !in_array(mb_substr($input, $i, 1), $stopSymbols, true)) {
             $i++;
         }
 
